@@ -2,20 +2,25 @@ console.log('hello background');
 
 const installed = new Set()
 let port = null;
+let borked = false;
 
 function handleMessage(message, sender, response) {
   console.log(message.type, message.id)
-  switch (message.type) {
-    case 'installed':
-      return Promise.resolve(installed)
-    case 'install':
-      install(message.id)
-      return Promise.resolve(true)
-    case 'uninstall':
-      uninstall(message.id)
-      return Promise.resolve(true)
+  if (message.type === 'installed') {
+    return Promise.resolve(installed)
   }
-  return Promise.reject(new Error('unknown message'))
+  if (!borked) {
+    switch (message.type) {
+      case 'install':
+        install(message.id)
+        return Promise.resolve(true)
+      case 'uninstall':
+        uninstall(message.id)
+        return Promise.resolve(true)
+    }
+  }
+  borked = false;
+  return Promise.reject()
 }
 
 function handleConnect(p) {
@@ -35,6 +40,10 @@ function uninstall(id) {
 
 function isEnabled(id) {
   return installed.has(id)
+}
+
+function bork() {
+  borked = true
 }
 
 function sendEvent(type, data) {

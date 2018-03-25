@@ -19,25 +19,36 @@ const fam = {
       return P.resolve(cloneInto(fakeAddon(TESTPILOT_ADDON_ID), window, {cloneFunctions: true}))
     }
     return getExperiments()
-      .then(exportFunction(function (xs) {
-        const x = xs.results.filter(x => x.xpi_url === url)[0]
-        if (x) {
-          return cloneInto(fakeAddon(x.addon_id), window, {cloneFunctions: true})
-        }
-        throw new Error(`unknown experiment url (${url})`)
-      }, window))
+      .then(
+        exportFunction(
+          function (xs) {
+            const x = xs.results.filter(x => x.xpi_url === url)[0]
+            if (x) {
+              return cloneInto(fakeAddon(x.addon_id), window, {cloneFunctions: true})
+            }
+            throw new Error(`unknown experiment url (${url})`)
+          },
+          window
+        )
+      )
   },
 
   getAddonByID(id) {
-    return new P(exportFunction(function (resolve, reject) {
-      browser.runtime.sendMessage({ type: 'installed' })
-      .then(exportFunction(function (installed) {
-        if (installed.has(id)) {
-          return resolve(cloneInto(fakeAddon(id), window, {cloneFunctions: true}))
-        }
-        return resolve(null);
-      }, window))
-    }, window))
+    return new P(exportFunction(
+      function (resolve, reject) {
+        browser.runtime.sendMessage({ type: 'installed' })
+        .then(
+          function (installed) {
+            if (installed.has(id)) {
+              return resolve(cloneInto(fakeAddon(id), window, {cloneFunctions: true}))
+            }
+            return resolve(null);
+          },
+          reject
+        )
+      },
+      window
+    ))
   },
 
   addEventListener(name, fn) {
@@ -48,16 +59,22 @@ const fam = {
 function fakeAddon(id) {
   return {
     install: function () {
-      return new P(exportFunction(function (resolve) {
-        return browser.runtime.sendMessage({type: 'install', id})
-        .then(exportFunction(resolve, window))
-      }, window))
+      return new P(exportFunction(
+        function (resolve, reject) {
+          return browser.runtime.sendMessage({type: 'install', id})
+            .then(resolve, reject)
+        },
+        window
+      ))
     },
     uninstall: function () {
-      return new P(exportFunction(function (resolve) {
-        return browser.runtime.sendMessage({type: 'uninstall', id})
-        .then(exportFunction(resolve, window))
-      }, window))
+      return new P(exportFunction(
+        function (resolve, reject) {
+          return browser.runtime.sendMessage({type: 'uninstall', id})
+            .then(resolve, reject)
+        },
+        window
+      ))
     },
     isEnabled: true,
     id

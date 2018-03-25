@@ -21,6 +21,13 @@ function createItem(page, x) {
   return li
 }
 
+function createBork(page) {
+  const button = document.createElement('button')
+  button.textContent = 'bork next call';
+  button.addEventListener('click', () => page.bork())
+  return button
+}
+
 Promise.all([
   browser.runtime.getBackgroundPage(),
   fetch('http://localhost:8000/api/experiments.json')
@@ -47,4 +54,5 @@ Promise.all([
     ul.appendChild(createItem(page, x))
   }
   body.appendChild(ul)
+  body.appendChild(createBork(page))
 })
