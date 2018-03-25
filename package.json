@@ -1,0 +1,14 @@
+{
+  "name": "fam",
+  "version": "1.0.0",
+  "description": "Fake Addon Manager",
+  "main": "background.js",
+  "scripts": {
+    "start": "web-ext run --firefox=nightly --start-url=localhost:8000"
+  },
+  "author": "Danny Coates",
+  "license": "MPL-2.0",
+  "devDependencies": {
+    "web-ext": "^2.5.0"
+  }
+}

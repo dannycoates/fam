@@ -1,0 +1,16 @@
+body {
+  background: #fbfbfb;
+}
+
+ul {
+  list-style: none;
+  padding: 0 10px;
+}
+
+li {
+  color: #aaa;
+}
+
+.enabled {
+  color: #111;
+}

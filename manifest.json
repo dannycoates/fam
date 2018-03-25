@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "Test Pilot Fake Addon Manager",
+  "description": "",
+  "version": "1.0",
+  "content_scripts": [
+    {
+      "matches": ["http://example.com/*", "http://localhost/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "background": { "scripts": ["background.js"] },
+  "page_action": {
+    "browser_style": true,
+    "default_icon": "fam.svg",
+    "default_popup": "popup.html",
+    "default_title": "FAM",
+    "show_matches": ["http://example.com/*", "http://localhost/*"]
+  },
+  "permissions": [
+    "activeTab",
+    "http://example.com/*",
+    "http://localhost/*"
+  ]
+}
