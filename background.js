@@ -30,7 +30,6 @@ function handleConnect(p) {
 function install(id) {
   installed.add(id)
   sendEvent('onInstalled', { id })
-  sendEvent('onEnabled', { id })
 }
 
 function uninstall(id) {
